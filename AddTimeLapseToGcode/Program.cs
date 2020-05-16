@@ -11,20 +11,20 @@ namespace AddTimeLapseToGcode
 	{
 		static void PrintHelp()
 		{
-			Console.WriteLine("Add time lapse to gcode V0.1");
+			Console.WriteLine("Add time lapse to gcode V0.1, Mikey's Lab.");
 			Console.WriteLine("Usage: AddTimeLapseToGcode.exe <inputfile> <outputfile> [-W] [-V] [-B <value>] [-R <value>] [-P <value>] [-S <value>] [-X <value>] [-Y <value>]");
 			Console.WriteLine("Required:");
 			Console.WriteLine("\t <input File>: File name of gcode provided by the slicer.");
 			Console.WriteLine("\t <outputfile>: File name to save the new gcode with time lapse modifcations.");
 			Console.WriteLine("Optional:");
-			Console.WriteLine(" -W\tWait for camera focus and setup after first layer.");
-			Console.WriteLine(" -B <v>\tWait every v layers for a camera battery swap.");
-			Console.WriteLine(" -R <v>\tmm to retract before park on layer change.");
-			Console.WriteLine(" -P <v>\tmm to purge after before resuming the print.");
-			Console.WriteLine(" -S <v>\tMilliseconds to wait for camera shutter.");
-			Console.WriteLine(" -X <v>\tX axis location for print head park.");
-			Console.WriteLine(" -Y <v>\tY axis location for print head park.");
-			Console.WriteLine(" -V\tVerbose logging to console.");
+			Console.WriteLine("\t -W\tWait for camera focus and setup after first layer.");
+			Console.WriteLine("\t -B <v>\tWait every v layers for a camera battery swap.");
+			Console.WriteLine("\t -R <v>\tmm to retract before park on layer change.");
+			Console.WriteLine("\t -P <v>\tmm to purge after before resuming the print.");
+			Console.WriteLine("\t -S <v>\tMilliseconds to wait for camera shutter.");
+			Console.WriteLine("\t -X <v>\tX axis location for print head park.");
+			Console.WriteLine("\t -Y <v>\tY axis location for print head park.");
+			Console.WriteLine("\t -V\tVerbose logging to console.");
 			return;
 		}
 
@@ -50,9 +50,18 @@ namespace AddTimeLapseToGcode
 			int BatterySwap = 0;
 			int ShutterWait = 750;
 
-			if (!File.Exists(args[0]))
+			if (Verbose) Console.WriteLine("Check command line and verify input file exists");
+			try
 			{
-				Console.WriteLine("File not found");
+				if (!File.Exists(args[0]))
+				{
+					Console.WriteLine("File not found");
+					PrintHelp();
+					return;
+				}
+			}
+			catch(Exception Ex)
+			{
 				PrintHelp();
 				return;
 			}
@@ -114,6 +123,11 @@ namespace AddTimeLapseToGcode
 					}
 
 				}
+			}
+			else
+			{
+				PrintHelp();
+				return;
 			}
 
 			using (StreamReader sr = new StreamReader(args[0]))
